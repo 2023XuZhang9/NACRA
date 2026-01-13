@@ -1,0 +1,215 @@
+{
+  "2.4 Lesion List": [
+    {
+      "Lesion Type": "Mass",
+      "2.4.1 Location": {
+        "2.4.1.1 Side": "Left/Right/Bilateral",
+        "2.4.1.2 Quadrant": "Upper outer/Upper inner/Lower inner/Lower outer/Scattered",
+        "2.4.1.3 Depth": "Anterior/Middle/Posterior",
+        "2.4.1.4 Notes": "Special Locations: Areola posterior/Central area/Axillary tail; Clock face directions: 3 o'clock/6 o'clock/9 o'clock/12 o'clock"
+      },
+      "2.4.2 Mass": {
+        "2.4.2.1 Shape": "Round/Oval/Irregular",
+        "2.4.2.2 Margin": "Smooth/Irregular/Notched/Spiculated",
+        "2.4.2.3 Signal": {
+          "2.4.2.3.1 T1WI": "Low/Equal/High",
+          "2.4.2.3.2 Fat-suppressed T2WI": "Slightly High/High/Equal/Low",
+          "2.4.2.3.3 DWI": "High/Equal/Low",
+          "2.4.2.3.4 ADC": "High/Equal/Low",
+          "2.4.2.3.5 Enhancement Features": "Homogeneous/Non-homogeneous/Ring/Non-enhancing/Internal low signal separation",
+          "2.4.2.3.6 Masked High Signal": "Yes/No"
+        },
+        "2.4.2.4 Size": "xx*xx*xx mm (Left-Right/Anterior-Posterior/Superior-Inferior)/Not measurable"
+      },
+      "2.4.3 Associated Signs": {
+        "2.4.3.1 Skin Retraction": "Yes/No",
+        "2.4.3.2 Nipple Retraction": "Yes/No",
+        "2.4.3.3 Skin Thickening": "Yes/No",
+        "2.4.3.4 Enlarged Axillary Lymph Nodes": "Yes/No",
+        "2.4.3.5 Axillary Lymph Node Cortex Thickening": "Yes/No"
+      },
+      "2.4.4 Other Signs": {
+        "2.4.4.1 Pectoralis Muscle Involvement": "Yes/No",
+        "2.4.4.2 Chest Wall Involvement": "Yes/No",
+        "2.4.4.3 Skin Involvement": "Yes/No",
+        "2.4.4.4 Nipple/Areola Involvement": "Yes/No",
+        "2.4.4.5 Internal Mammary Lymph Nodes": "Yes (Max Diameter ___ mm)/No",
+        "2.4.4.6 Bone": "Yes/No"
+      },
+      "2.4.5 BI-RADS Classification": {
+        "2.4.5.1 BI-RADS": "0/1/2/3/4A/4B/4C/5/6"
+      }
+    },
+    {
+      "Lesion Type": "Non-mass Enhancement",
+      "2.4.1 Location": {
+        "2.4.1.1 Side": "Left/Right/Bilateral",
+        "2.4.1.2 Quadrant": "Upper outer/Upper inner/Lower inner/Lower outer/Scattered",
+        "2.4.1.3 Depth": "Anterior/Middle/Posterior",
+        "2.4.1.4 Notes": "Special Locations: Areola posterior/Central area/Axillary tail; Clock face directions: 3 o'clock/6 o'clock/9 o'clock/12 o'clock"
+      },
+      "2.4.2 Non-mass Enhancement": {
+        "2.4.2.1 Distribution": "Focal/Linear/Sector/Regional/Multiregional/Diffuse",
+        "2.4.2.2 Signal": {
+          "2.4.2.2.1 T1WI": "Low/Equal/High",
+          "2.4.2.2.2 Fat-suppressed T2WI": "Slightly High/High/Equal/Low",
+          "2.4.2.2.3 DWI": "High/Equal/Low",
+          "2.4.2.2.4 ADC": "High/Equal/Low",
+          "2.4.2.2.5 Enhancement Features": "Homogeneous/Non-homogeneous/Polka-dotted/Clustered ring",
+          "2.4.2.2.6 Max Layer": "xx*xx*xx mm (Left-Right/Anterior-Posterior/Superior-Inferior)/Not measurable"
+        }
+      },
+      "2.4.3 Associated Signs": {
+        "2.4.3.1 Skin Retraction": "Yes/No",
+        "2.4.3.2 Nipple Retraction": "Yes/No",
+        "2.4.3.3 Skin Thickening": "Yes/No",
+        "2.4.3.4 Enlarged Axillary Lymph Nodes": "Yes/No",
+        "2.4.3.5 Axillary Lymph Node Cortex Thickening": "Yes/No"
+      },
+      "2.4.4 Other Signs": {
+        "2.4.4.1 Pectoralis Muscle Involvement": "Yes/No",
+        "2.4.4.2 Chest Wall Involvement": "Yes/No",
+        "2.4.4.3 Skin Involvement": "Yes/No",
+        "2.4.4.4 Nipple/Areola Involvement": "Yes/No",
+        "2.4.4.5 Internal Mammary Lymph Nodes": "Yes (Max Diameter ___ mm)/No",
+        "2.4.4.6 Bone": "Yes/No"
+      },
+      "2.4.5 BI-RADS Classification": {
+        "2.4.5.1 BI-RADS": "0/1/2/3/4A/4B/4C/5/6"
+      }
+    },
+    {
+      "Lesion Type": "Mass with Non-mass",
+      "2.4.1 Location": {
+        "2.4.1.1 Side": "Left/Right/Bilateral",
+        "2.4.1.2 Quadrant": "Upper outer/Upper inner/Lower inner/Lower outer/Scattered",
+        "2.4.1.3 Depth": "Anterior/Middle/Posterior",
+        "2.4.1.4 Notes": "Special Locations: Areola posterior/Central area/Axillary tail; Clock face directions: 3 o'clock/6 o'clock/9 o'clock/12 o'clock"
+      },
+      "2.4.2 Mass with Non-mass": {
+        "2.4.2.1 Mass Shape": "Round/Oval/Irregular",
+        "2.4.2.2 Mass Margin": "Smooth/Irregular/Notched/Spiculated",
+        "2.4.2.3 Mass Enhancement Features": "Homogeneous/Non-homogeneous/Ring/Non-enhancing/Internal low signal separation",
+        "2.4.2.4 Non-mass Enhancement Distribution": "Focal/Linear/Sector/Regional/Multiregional/Diffuse",
+        "2.4.2.5 Signal": {
+          "2.4.2.5.1 T1WI": "Low/Equal/High",
+          "2.4.2.5.2 Fat-suppressed T2WI": "Slightly High/High/Equal/Low",
+          "2.4.2.5.3 DWI": "High/Equal/Low",
+          "2.4.2.5.4 ADC": "High/Equal/Low",
+          "2.4.2.5.5 Non-mass Enhancement Features": "Homogeneous/Non-homogeneous/Polka-dotted/Clustered ring"
+        },
+        "2.4.2.6 Size": "xx*xx*xx mm (Left-Right/Anterior-Posterior/Superior-Inferior)/Not measurable"
+      },
+      "2.4.3 Associated Signs": {
+        "2.4.3.1 Skin Retraction": "Yes/No",
+        "2.4.3.2 Nipple Retraction": "Yes/No",
+        "2.4.3.3 Skin Thickening": "Yes/No",
+        "2.4.3.4 Enlarged Axillary Lymph Nodes": "Yes/No",
+        "2.4.3.5 Axillary Lymph Node Cortex Thickening": "Yes/No"
+      },
+      "2.4.4 Other Signs": {
+        "2.4.4.1 Pectoralis Muscle Involvement": "Yes/No",
+        "2.4.4.2 Chest Wall Involvement": "Yes/No",
+        "2.4.4.3 Skin Involvement": "Yes/No",
+        "2.4.4.4 Nipple/Areola Involvement": "Yes/No",
+        "2.4.4.5 Internal Mammary Lymph Nodes": "Yes (Max Diameter ___ mm)/No",
+        "2.4.4.6 Bone": "Yes/No"
+      },
+      "2.4.5 BI-RADS Classification": {
+        "2.4.5.1 BI-RADS": "0/1/2/3/4A/4B/4C/5/6"
+      }
+    },
+    {
+      "Lesion Type": "Focal Enhancement",
+      "2.4.1 Location": {
+        "2.4.1.1 Side": "Left/Right/Bilateral",
+        "2.4.1.2 Quadrant": "Upper outer/Upper inner/Lower inner/Lower outer/Scattered",
+        "2.4.1.3 Depth": "Anterior/Middle/Posterior",
+        "2.4.1.4 Notes": "Special Locations: Areola posterior/Central area/Axillary tail; Clock face directions: 3 o'clock/6 o'clock/9 o'clock/12 o'clock"
+      },
+      "2.4.2 Focal Enhancement": {
+        "2.4.2.1 Presence": "Yes/No"
+      },
+      "2.4.3 Associated Signs": {
+        "2.4.3.1 Skin Retraction": "Yes/No",
+        "2.4.3.2 Nipple Retraction": "Yes/No",
+        "2.4.3.3 Skin Thickening": "Yes/No",
+        "2.4.3.4 Enlarged Axillary Lymph Nodes": "Yes/No",
+        "2.4.3.5 Axillary Lymph Node Cortex Thickening": "Yes/No"
+      },
+      "2.4.4 Other Signs": {
+        "2.4.4.1 Pectoralis Muscle Involvement": "Yes/No",
+        "2.4.4.2 Chest Wall Involvement": "Yes/No",
+        "2.4.4.3 Skin Involvement": "Yes/No",
+        "2.4.4.4 Nipple/Areola Involvement": "Yes/No",
+        "2.4.4.5 Internal Mammary Lymph Nodes": "Yes (Max Diameter ___ mm)/No",
+        "2.4.4.6 Bone": "Yes/No"
+      },
+      "2.4.5 BI-RADS Classification": {
+        "2.4.5.1 BI-RADS": "0/1/2/3/4A/4B/4C/5/6"
+      }
+    },
+    {
+      "Lesion Type": "Ductal Dilation",
+      "2.4.1 Location": {
+        "2.4.1.1 Side": "Left/Right/Bilateral",
+        "2.4.1.2 Quadrant": "Upper outer/Upper inner/Lower inner/Lower outer/Scattered",
+        "2.4.1.3 Depth": "Anterior/Middle/Posterior",
+        "2.4.1.4 Notes": "Special Locations: Areola posterior/Central area/Axillary tail; Clock face directions: 3 o'clock/6 o'clock/9 o'clock/12 o'clock"
+      },
+      "2.4.2 Ductal Dilation": {
+        "2.4.2.1 Quantity": "Single/Multiple",
+        "2.4.2.2 Enhancement": "Visible Enhancement/No Enhancement"
+      },
+      "2.4.3 Associated Signs": {
+        "2.4.3.1 Skin Retraction": "Yes/No",
+        "2.4.3.2 Nipple Retraction": "Yes/No",
+        "2.4.3.3 Skin Thickening": "Yes/No",
+        "2.4.3.4 Enlarged Axillary Lymph Nodes": "Yes/No",
+        "2.4.3.5 Axillary Lymph Node Cortex Thickening": "Yes/No"
+      },
+      "2.4.4 Other Signs": {
+        "2.4.4.1 Pectoralis Muscle Involvement": "Yes/No",
+        "2.4.4.2 Chest Wall Involvement": "Yes/No",
+        "2.4.4.3 Skin Involvement": "Yes/No",
+        "2.4.4.4 Nipple/Areola Involvement": "Yes/No",
+        "2.4.4.5 Internal Mammary Lymph Nodes": "Yes (Max Diameter ___ mm)/No",
+        "2.4.4.6 Bone": "Yes/No"
+      },
+      "2.4.5 BI-RADS Classification": {
+        "2.4.5.1 BI-RADS": "0/1/2/3/4A/4B/4C/5/6"
+      }
+    },
+    {
+      "Lesion Type": "Structural Distortion",
+      "2.4.1 Location": {
+        "2.4.1.1 Side": "Left/Right/Bilateral",
+        "2.4.1.2 Quadrant": "Upper outer/Upper inner/Lower inner/Lower outer/Scattered",
+        "2.4.1.3 Depth": "Anterior/Middle/Posterior",
+        "2.4.1.4 Notes": "Special Locations: Areola posterior/Central area/Axillary tail; Clock face directions: 3 o'clock/6 o'clock/9 o'clock/12 o'clock"
+      },
+      "2.4.2 Structural Distortion": {
+        "2.4.2.1 Enhancement": "Visible Enhancement/No Enhancement",
+        "2.4.2.2 Max Layer": "xx*xx*xx mm (Left-Right/Anterior-Posterior/Superior-Inferior)"
+      },
+      "2.4.3 Associated Signs": {
+        "2.4.3.1 Skin Retraction": "Yes/No",
+        "2.4.3.2 Nipple Retraction": "Yes/No",
+        "2.4.3.3 Skin Thickening": "Yes/No",
+        "2.4.3.4 Enlarged Axillary Lymph Nodes": "Yes/No",
+        "2.4.3.5 Axillary Lymph Node Cortex Thickening": "Yes/No"
+      },
+      "2.4.4 Other Signs": {
+        "2.4.4.1 Pectoralis Muscle Involvement": "Yes/No",
+        "2.4.4.2 Chest Wall Involvement": "Yes/No",
+        "2.4.4.3 Skin Involvement": "Yes/No",
+        "2.4.4.4 Nipple/Areola Involvement": "Yes/No",
+        "2.4.4.5 Internal Mammary Lymph Nodes": "Yes (Max Diameter ___ mm)/No",
+        "2.4.4.6 Bone": "Yes/No"
+      },
+      "2.4.5 BI-RADS Classification": {
+        "2.4.5.1 BI-RADS": "0/1/2/3/4A/4B/4C/5/6"
+      }
+    }
+  ]
+}

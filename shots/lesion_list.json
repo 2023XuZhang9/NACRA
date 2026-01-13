@@ -1,0 +1,60 @@
+{
+  "zeroshot": "",
+  "oneshot": [
+    {
+      "question": "The size and shape of both breasts are basically symmetrical, both breasts have scattered fibroglandular tissue, and the background parenchyma shows mild enhancement. In the central area of the right breast, there is a mass in the anterior middle band with irregular margins, approximately 51*38mm in size. After enhancement, the margin shows significant uneven enhancement, possibly involving the nipple. The internal enhancement of the mass is not obvious, and the mass shows slightly longer T2 and slightly longer T1 signals. In the left breast, scattered punctate enhancement is observed. There is no skin thickening on either side, and both nipples are symmetrical with no retraction. The chest wall muscles show no abnormal changes. Enlarged and enhanced lymph nodes are present in the right axilla.",
+      "answer": {
+        "2 Radiological Findings": {
+          "2.1 Bilateral Breast Shape": "Symmetric",
+          "2.2 Mammary Glandular Tissue": "Scattered Distribution",
+          "2.3 Background Parenchyma": "Mild",
+          "2.4 Lesion List": [
+            {
+              "Lesion Type": "Mass",
+              "2.4.1 Location": {
+                "2.4.1.1 Side": "Right",
+                "2.4.1.2 Quadrant": "Central Area",
+                "2.4.1.4 Notes": "",
+                "2.4.1.3 Depth": "Anterior/Middle"
+              },
+              "2.4.2 Mass": {
+                "2.4.2.1 Shape": "",
+                "2.4.2.2 Margin": "Irregular",
+                "2.4.2.5 Signal": {
+                  "2.5.1.3.1 T1WI": "Slightly Longer",
+                  "2.5.1.3.2 Fat-suppressed T2WI": "Slightly High",
+                  "2.4.2.5.3 DWI": "",
+                  "2.4.2.5.4 ADC": "",
+                  "2.4.2.2.5 Enhancement Features": "Uneven",
+                  "2.4.2.5 Signal": "No"
+                },
+                "2.4.2.6 Size": "51*38 mm (Left-Right/Anterior-Posterior/Superior-Inferior)"
+              },
+              "2.4.3 Associated Signs": {
+                "2.4.3.1 Skin Retraction": "No",
+                "2.4.3.2 Nipple Retraction": "No",
+                "2.4.3.3 Skin Thickening": "No",
+                "2.4.3.4 Enlarged Axillary Lymph Nodes": "Yes",
+                "2.4.3.5 Axillary Lymph Node Cortex Thickening": ""
+              },
+              "2.4.4 Other Signs": {
+                "2.4.4.1 Pectoralis Muscle Involvement": "No",
+                "2.4.4.2 Chest Wall Involvement": "No",
+                "2.4.4.3 Skin Involvement": "No",
+                "2.4.4.4 Nipple/Areola Involvement": "Possibly involving the nipple",
+                "2.4.4.5 Internal Mammary Lymph Nodes": "No",
+                "2.4.4.6 Bone": "Sternal-enhancing nodule",
+                "2.8 BI-RADS Classification": {
+                  "2.8.1 BI-RADS": "6"
+                }
+              }
+            }
+          ],
+          "2.5.1 Scattered Punctate Enhancement in Both Breasts": "Left breast",
+          "2.5.2 Scattered Focal Enhancement in Both Breasts": "No",
+          "2.5.3 Scattered Punctate and Focal Enhancement in Both Breasts": "No"
+        }
+      }
+    }
+  ]
+}

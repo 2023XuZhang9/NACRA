@@ -1,0 +1,10 @@
+{
+  "zeroshot": "",
+  "oneshot": [
+    {
+      "question": "The size and shape of both breasts are basically symmetrical, both breasts have scattered fibroglandular tissue, and the background parenchyma shows mild enhancement. In the central area of the right breast, there is a mass in the anterior middle band with irregular margins, approximately 51*38mm in size. After enhancement, the margin shows significant uneven enhancement, possibly involving the nipple. The internal enhancement of the mass is not obvious, and the mass shows slightly longer T2 and slightly longer T1 signals. In the left breast, scattered punctate enhancement is observed. There is no skin thickening on either side, and both nipples are symmetrical with no retraction. The chest wall muscles show no abnormal changes. Enlarged and enhanced lymph nodes are present in the right axilla.",
+      "answer": "Mass in the central area of the right breast in the anterior middle band, possibly involving the nipple, BI-RADS 6. Sternal-enhancing nodule, suspicious for metastasis, please correlate with other examinations. Enlarged lymph nodes in the right axilla."
+    }
+  ]
+}
+

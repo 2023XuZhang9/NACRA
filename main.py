@@ -283,7 +283,7 @@ def process_patient(patient_path, template_dict, template_snippet, sr_shot_examp
         json.dump(result, f, ensure_ascii=False, indent=2)
     print(f"\n====== Saved all structured results for {patient_id} to {out_path} ======\n")
 
-def main(shot_mode=0, max_workers=8):
+def main(shot_mode=0, max_workers=10):
     template_dict, template_snippet = load_template_snippet()
     sr_shot_examples = load_few_shot(shot_mode, agent_name="structured_report")
     files = sorted([f for f in os.listdir(STORE_DIR) if f.endswith(".json")])
@@ -309,3 +309,4 @@ def main(shot_mode=0, max_workers=8):
 if __name__ == "__main__":
     pre_sync_from_source()
     main(shot_mode=1, max_workers=1)
+

@@ -44,7 +44,7 @@ NACRA/
 ├── utils/
 │   ├── parser.py                 # Baseline detection helper(s)
 │   └── tokentracker.py           # Token estimation using tiktoken
-├── shots/                        # Prompt configurations (zero/one/few-shot)
+├── shots/                        # Prompt configurations (zero/one)
 │   ├── birads.json
 │   ├── diag.json
 │   ├── lesion_list.json

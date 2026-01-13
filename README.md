@@ -26,7 +26,6 @@ This repo sends queries to a LightRAG endpoint.
 
 ```bash
 export LIGHTRAG_URL="http://localhost:9621/query"
-export LIGHTRAG_MODE="mix"
 ```
 
 > Note: If your current `main.py` / `tools/lightrag.py` still hard-codes the URL, update them to read `LIGHTRAG_URL` from the environment.

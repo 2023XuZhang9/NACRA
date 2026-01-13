@@ -381,7 +381,7 @@ def agent_radiology_diag(current_desc, memory, shot_mode=0):
     final_text = _dedup_keep_one(final_text)
     return final_text, tok1 + tok2
 
-def memory_checker(memory, is_baseline_flag=None, max_rounds=20, shot_mode=0):
+def memory_checker(memory, is_baseline_flag=None, max_rounds=10, shot_mode=0):
     total_tokens = 0
     round_idx = 0
     if is_baseline_flag is not None:
@@ -468,4 +468,5 @@ def memory_checker(memory, is_baseline_flag=None, max_rounds=20, shot_mode=0):
             _append_failure_line(missing, case_id=case_id, rounds_done=round_idx, max_rounds=max_rounds)
 
     return memory, total_tokens
+
 

@@ -10,7 +10,7 @@ LIGHTRAG_URL    = os.getenv("LIGHTRAG_URL","xxx")
 REQUEST_TIMEOUT = int(os.getenv("LR_TIMEOUT", "120"))
 MAX_ATTEMPTS    = 10
 DEBUG_PRINT     = bool(int(os.getenv("LR_DEBUG", "1")))
-ALLOWED_RECIST  = {"CR", "PR", "SD", "PD", "baseline"}
+ALLOWED_RECIST  = {"CR", "PR", "SD", "PD", "Baseline"}
 DECISION_LOG_PATH = os.getenv(
     "DECISION_LOG_PATH",
     os.path.join("structured_reports", "recist_eval_log.jsonl")
@@ -54,20 +54,18 @@ def recist_calculator(
 
     if new_lesions or non_target_pd:
         return {
-            "ok": True, "decision": "PD",
+            "ok": True,
             "baseline_sld_mm": base, "nadir_sld_mm": nadir, "current_sld_mm": cur,
             "delta_vs_baseline_pct": None if not base else (cur - base) / base * 100.0,
             "delta_vs_nadir_pct":    None if not nadir else (cur - nadir) / nadir * 100.0,
-            "reason": "New lesions or progression in non-target lesions"
         }
 
     if cur == 0.0:
         return {
-            "ok": True, "decision": "CR",
+            "ok": True, 
             "baseline_sld_mm": base, "nadir_sld_mm": nadir, "current_sld_mm": cur,
             "delta_vs_baseline_pct": None if not base else -100.0,
             "delta_vs_nadir_pct":    None if not nadir else (cur - nadir) / nadir * 100.0,
-            "reason": "Target lesions resolved, total score 0"
         }
 
     if nadir not in (None, 0.0):
@@ -75,30 +73,27 @@ def recist_calculator(
         abs_inc = cur - nadir
         if rel >= 20.0 and abs_inc >= 5.0:
             return {
-                "ok": True, "decision": "PD",
+                "ok": True, 
                 "baseline_sld_mm": base, "nadir_sld_mm": nadir, "current_sld_mm": cur,
                 "delta_vs_baseline_pct": None if not base else (cur - base) / base * 100.0,
                 "delta_vs_nadir_pct": rel,
-                "reason": "Increase of ≥20% compared to nadir and absolute increase of ≥5 mm"
             }
 
     if base not in (None, 0.0):
         rel = (cur - base) / base * 100.0
         if rel <= -30.0:
             return {
-                "ok": True, "decision": "PR",
+                "ok": True, 
                 "baseline_sld_mm": base, "nadir_sld_mm": nadir, "current_sld_mm": cur,
                 "delta_vs_baseline_pct": rel,
                 "delta_vs_nadir_pct": None if not nadir else (cur - nadir) / nadir * 100.0,
-                "reason": "≥30% reduction compared to baseline"
             }
 
     return {
-        "ok": True, "decision": "SD",
+        "ok": True,
         "baseline_sld_mm": base, "nadir_sld_mm": nadir, "current_sld_mm": cur,
         "delta_vs_baseline_pct": None if not base else (cur - base) / base * 100.0,
         "delta_vs_nadir_pct":    None if not nadir else (cur - nadir) / nadir * 100.0,
-        "reason": "Did not achieve CR/PR and did not meet PD criteria"
     }
 
 def lightrag_query(user_prompt: str, query_title: str) -> str:
@@ -205,7 +200,6 @@ def _recist_via_lightrag_tool(history_text: str,
             if DEBUG_PRINT:
                 print("    → Determined to be non-computable:")
             history_msgs.append({"role": "assistant", "content": json.dumps(obj, ensure_ascii=False)})
-            # 继续复核到上限
             history_msgs.append({"role": "user", "content": "Please verify sentence by sentence whether there are truly no usable values (ignoring lymph nodes). If calculation is possible, perform CALL; if calculation remains impossible, continue returning INELIGIBLE."})
             continue
 
@@ -276,8 +270,6 @@ def _fallback_via_plain_rag(history_text: str,
         "Please output only one of the above five labels (Baseline/CR/PR/SD/PD), no explanations."
     )
     text = lightrag_query(user_prompt, "NAC Efficacy Assessment - Fallback")
-    m = re.search(r"(Baseline|CR|PR|SD|PD)", str(text))
-    return m.group(1) if m else ""
 
 def eval_recist_result(history_text: str,
                        current_desc: str,
@@ -322,4 +314,5 @@ def eval_recist_result(history_text: str,
         _log_decision(label=label, method="gpt_fallback_plain",
                       meta=None, trace_id=trace_id)
     return label
+
 

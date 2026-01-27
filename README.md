@@ -37,9 +37,9 @@ export LIGHTRAG_URL="http://localhost:9621/query"
 ```
 NACRA/
 ├── main.py                      # Entry point: loads per-patient JSON and runs the pipeline
-├── report_processor.py           # Multi-step processing (lesion list / diagnosis / response) + validations
-├── recist_eval.py                # RECIST-like response evaluation helper
+├── report_processor.py           # Multi-step processing (lesion list / diagnosis / response) + validations         
 ├── tools/
+│   ├── recist_eval.py           # RECIST-like response evaluation helper
 │   └── lightrag.py               # Thin HTTP client to call LightRAG /query
 ├── utils/
 │   ├── parser.py                 # Baseline detection helper(s)

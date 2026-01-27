@@ -41,9 +41,7 @@ NACRA/
 ├── tools/
 │   ├── recist_eval.py           # RECIST-like response evaluation helper
 │   └── lightrag.py               # Thin HTTP client to call LightRAG /query
-├── utils/
-│   ├── parser.py                 # Baseline detection helper(s)
-│   └── tokentracker.py           # Token estimation using tiktoken
+├── utils/    
 ├── shots/                        # Prompt configurations (zero/one)
 │   ├── birads.json
 │   ├── diag.json

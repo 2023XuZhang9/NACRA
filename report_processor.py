@@ -6,7 +6,7 @@ import json
 from tools.lightrag import query_lightrag
 from utils.tokentracker import estimate_tokens
 
-role_desc = "You are an experienced breast tumor radiologist with expertise in stepwise reasoning and structured output."
+role_desc = "xxx"
 with open("template/lesion_list_template.json", "r", encoding="utf-8") as f:
     lesion_template = json.load(f)
 lesion_list_template_str = json.dumps(lesion_template["2.4 Lesion List"], ensure_ascii=False, indent=2)
@@ -468,5 +468,6 @@ def memory_checker(memory, is_baseline_flag=None, max_rounds=10, shot_mode=0):
             _append_failure_line(missing, case_id=case_id, rounds_done=round_idx, max_rounds=max_rounds)
 
     return memory, total_tokens
+
 
 

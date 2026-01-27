@@ -1,7 +1,7 @@
 import requests
 
-HOST = "https://openrouter.ai/api/v1"
-KEY = "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"
+HOST = "xxx"
+KEY = "xxx"
 MODEL = "gpt-4o"
 def call_gpt_with_token(prompt: str) -> str:
     url = f"{HOST}/chat/completions"
@@ -10,8 +10,7 @@ def call_gpt_with_token(prompt: str) -> str:
         "max_tokens": 2048,
         "temperature": 0.001,
         "messages": [
-            {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": prompt},
+            {"role": "xxx", "content": prompt},
         ],
         "stream": False
     }
@@ -23,6 +22,7 @@ def call_gpt_with_token(prompt: str) -> str:
     content = data["choices"][0]["message"]["content"]
     token = data.get("usage", {}).get("total_tokens", 0)
     return content, token
+
 
 
 

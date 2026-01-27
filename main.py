@@ -13,7 +13,7 @@ OUTPUT_DIR = "structured_reports"
 API_URL = "LIGHTRAG_URL"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 TOKEN_MODEL = "gpt-4o"
-role_desc = "You are a senior breast tumor imaging expert, familiar with breast MRI report interpretation, BI-RADS classification, and RECIST efficacy assessment. Please use the provided description as the sole source of information to conduct step-by-step reasoning and structured report writing, ensuring the output is objective, traceable, and verifiable, and based solely on the provided information, without conjecture."
+role_desc = "xxx"
 
 def upsert_patient_records(patient_id: str, incoming_records):
     if not isinstance(incoming_records, list):
@@ -309,4 +309,5 @@ def main(shot_mode=0, max_workers=10):
 if __name__ == "__main__":
     pre_sync_from_source()
     main(shot_mode=1, max_workers=1)
+
 

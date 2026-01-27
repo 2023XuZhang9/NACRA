@@ -1,16 +1,14 @@
 import re
-from recist_eval import eval_recist_result
 from datetime import datetime
 import os
 import json
-from tools.lightrag import query_lightrag
-from utils.tokentracker import estimate_tokens
+from utils.chat import call_gpt_with_token
 
 role_desc = "xxx"
 with open("template/lesion_list_template.json", "r", encoding="utf-8") as f:
     lesion_template = json.load(f)
 lesion_list_template_str = json.dumps(lesion_template["2.4 Lesion List"], ensure_ascii=False, indent=2)
-KEY_FIELDS = ["current_lesion_list", "Treatment Efficacy Result", "Radiological Diagnosis"]
+KEY_FIELDS = ["current_lesion_list", "Radiological Diagnosis"]
 FORBIDDEN_PATTERNS = [
     r"(?i)\.pdf\b",
     r"(?i)\bpdf\b",
@@ -159,12 +157,6 @@ def clean_radiology_diag(text):
     text = text.strip()
     return text
 
-def query_lightrag_with_token(prompt, desc, model="gpt-4o"):
-    result = query_lightrag(prompt, desc)
-    prompt_token = estimate_tokens(prompt, model=model)
-    result_token = estimate_tokens(str(result), model=model)
-    total_token = prompt_token + result_token
-    return result, total_token
 
 def agent_lesion_list(memory, shot_mode=0):
     history_text = "\n\n====Historical Follow-up Description Split====\n\n".join(memory.get("history_descriptions", []))
@@ -173,213 +165,36 @@ def agent_lesion_list(memory, shot_mode=0):
     history_lesion_lists_str = (
         json.dumps(history_lesion_lists, ensure_ascii=False, indent=2) if history_lesion_lists else 'None'
     )
-
-    kb_query = "Summarize the key points for distinguishing MRI breast lesions"
-    kb_context = "Knowledge points summary, excluding patient cases."
-    kb_points, kb_token = query_lightrag_with_token(kb_query, kb_context)
+    current_description = memory.get("current_description", "") or ""
     phase = "Baseline" if is_baseline_case(memory) else "Follow-up"
+    with open("template/lesion_list_template.json", "r", encoding="utf-8") as f:
+        lesion_template = json.load(f)
+    lesion_list_JSON_template = json.dumps(lesion_template["2.4 Lesion List"], ensure_ascii=False, indent=2)
     prompt = (
         "*** Please reference the supplementary materials. ***"
     )
-
-    result, token = query_lightrag_with_token(prompt, memory.get("current_description", ""))
+    result, token = call_gpt_with_token(prompt)
     res = (result or "").strip()
-
-    if is_baseline_case(memory):
-        try:
-            js = json.loads(extract_json_from_llm_output(res))
-            if lesion_list_contains_birads6(js):
-                print("[Guard] Baseline case detected BI-RADS:6 in lesion list → Clearing and retrying")
-                return "", token
-        except Exception:
-            if re.search(r"BI\s*[-–—]?\s*RADS\s*[:：]?\s*6\b", res, flags=re.I):
-                print("[Guard] Suspected BI-RADS:6 in baseline case text → Clearing and retrying")
-                return "", token
-    if not is_baseline_case(memory):
-        try:
-            js = json.loads(extract_json_from_llm_output(res))
-            if not lesion_list_contains_birads6(js):
-                print("[Guard] Follow-up case lesion list does not include BI-RADS:6 → Clearing and retrying")
-                return "", token
-        except Exception:
-            if not re.search(r"BI\s*[-–—]?\s*RADS\s*[:：]?\s*6\b", res, flags=re.I):
-                print("[Guard] BI-RADS:6 not found in follow-up case text → Clearing and retrying")
-                return "", token
-
     return res, token
 
 
-def eval_response_agent(memory, shot_mode=0):
-    history_desc = memory.get("history_descriptions", []) or []
-    history_text = "\n\n====Historical Follow-up Description Split====\n\n".join(map(str, history_desc))
-    history_lesion_lists = memory.get("history_lesion_lists", []) or []
-    history_lesion_lists_str = (
-        json.dumps(history_lesion_lists, ensure_ascii=False, indent=2) if history_lesion_lists else "None"
-    )
-    current_desc = memory.get("current_description", "") or ""
-    current_lesion_list = (
-        memory.get("lesion_list", []) or memory.get("current_lesion_list", []) or []
-    )
-    if isinstance(current_lesion_list, dict) and "lesion_list" in current_lesion_list:
-        current_lesion_list = current_lesion_list["lesion_list"]
-    current_lesion_list_str = json.dumps(current_lesion_list, ensure_ascii=False, indent=2)
-    few_shots = load_few_shot(shot_mode, agent_name="recist")
-    label = eval_recist_result(
-        history_text=history_text,
-        current_desc=current_desc,
-        history_lesion_lists_str=history_lesion_lists_str,
-        current_lesion_list_str=current_lesion_list_str,
-        few_shot=few_shots,
-    )
-    return (label or "").strip(), 0
-
 def agent_radiology_diag(current_desc, memory, shot_mode=0):
-    if not current_desc:
-        return "", 0
-
-    few_shot = load_few_shot(shot_mode, agent_name="diag")
-    history_lesion_lists = memory.get('history_lesion_lists', [])
-    history_lesion_lists_str = (
-        json.dumps(history_lesion_lists, ensure_ascii=False, indent=2) if history_lesion_lists else 'None'
-    )
-    current_lesion_list = memory.get('current_lesion_list', [])
-    history_desc = memory.get("history_descriptions", [])
-    history_text = "\n\n====Historical Follow-up Description Split====\n\n".join(history_desc) if history_desc else "None"
-    NEED_BIRADS_TYPES = {"Mass", "Non-mass Enhancement", "Mass with Non-mass", "Punctate Enhancement", "Ductal Dilatation", "Structural Distortion"}
-
-    def normalize_birads(x: str) -> str:
-        s = str(x or "").upper()
-        s = s.replace("BI-RADS", "").replace("BIRADS", "")
-        s = re.sub(r'[\s:：.,.，；;]+', '', s)
-        return s  # Expect to return 1/2/3/4A/4B/4C/5/6
-
-    def build_core_text_from_current(current_lesion_list):
-        specs = []
-        for it in (current_lesion_list or []):
-            typ = (it.get("Lesion Type") or "").strip()
-            if typ not in NEED_BIRADS_TYPES:
-                continue
-            loc = it.get("2.4.1 Location") or {}
-            side = (loc.get("2.4.1.1 Side") or "").strip()
-            quad = (loc.get("2.4.1.2 Quadrant") or "").strip()
-            depth = (loc.get("2.4.1.3 Depth") or "").strip()
-            bir_raw = (
-                    ((it.get("2.4.5 BI-RADS Classification") or {}).get("2.4.5.1 BI-RADS"))
-                    or it.get("BI-RADS Rating") or it.get("BI_RADS") or ""
-            )
-            bir = normalize_birads(bir_raw)
-            if bir not in {"1", "2", "3", "4A", "4B", "4C", "5", "6"}:
-                continue
-            specs.append({"side": side, "quad": quad, "depth": depth, "type": typ, "birads": bir})
-        lines = []
-        for s in specs:
-            pos = "".join([s["side"], s["quad"], s["depth"]])
-            line = f"{pos}{s['type']}，BI-RADS:{s['birads']}."
-            lines.append(line)
-        core_text = "".join(lines)
-        return core_text, specs
-
-    core_text, specs = build_core_text_from_current(memory.get("current_lesion_list", []))
-    print(f"[Generation] Total {len(specs)} lesions that need to be graded:", [(s['type'], s['birads']) for s in specs])
-    print(core_text)
-    N = len(specs)
-    tok1 = 0
-    if N > 0:
-        refine_prompt = (
-            "*** Please reference the supplementary materials. ***"
-        )
-
-        def tidy_core_text(text: str) -> str:
-            t = (text or "").replace("\r", "")
-            lines = [ln.strip() for ln in t.split("\n") if ln.strip()]
-            lines = [ln if re.search(r'[..!？?]$', ln) else (ln + ".") for ln in lines]
-            lines = [re.sub(r'[.]{2,}$', '.', ln) for ln in lines]
-            return "".join(lines)
-
-        core_text_raw, tok1 = query_lightrag_with_token(refine_prompt, current_desc)
-        core_text = tidy_core_text(core_text_raw)
-        print(core_text)
-        core_text = re.sub(r"\b\d+(\.\d+)?\s*(mm|cm|%)\b|约\s*\d+(\.\d+)?\s*(mm|cm)|[×xX*]", "", core_text)
-        sents = [s for s in re.split(r"[.!?？！]", core_text) if s.strip()]
-        PATTERN = r"""
-        BI\s*[-–—]?\s*RADS           
-        (?:\s*(?:Classification|Grade))?        
-        \s*[:：]?\s*
-        (?:
-            (?<!\d)4\s*[ABC](?![A-Z])  
-          | (?<!\d)[02356](?!\d)     
-        )
-        (?:\s*[grade|type])?            
-        """
-
-        lesion_sents = [s for s in sents if re.search(PATTERN, s, flags=re.I | re.X)]
-        lesion_cnt = len(lesion_sents)
-        expected_cnt = len(specs)
-        if lesion_cnt != expected_cnt:
-            print(f"[Guard] The number of lesion sentences does not match: Expected {expected_cnt} sentences, but found {lesion_cnt} → Prompt retry.")
-            core_text = ""
-
-    else:
-        tok1 = 0
-    extra_prompt = (
+    historical_description = "\n".join(memory.get("history_descriptions", []))
+    history_lesion_lists = json.dumps(memory.get("history_lesion_lists", []), ensure_ascii=False, indent=2)
+    historical_impression = "\n".join(memory.get("history_impressions", []))
+    current_description = memory.get("current_description", "") or ""
+    current_lesion_list = json.dumps(memory.get("current_lesion_list", []), ensure_ascii=False, indent=2)
+    one_shot_radiology_impression_JSON_example = load_few_shot(shot_mode, agent_name="diag")
+    with open("template/structured_report_template.json", encoding="utf-8") as f:
+        structured_report = json.load(f)
+    radiology_impression_JSON_template = json.dumps(structured_report["3 Radiological Diagnosis"], ensure_ascii=False, indent=2)
+    prompt = (
         "*** Please reference the supplementary materials. ***"
     )
-    extra_result, tok2 = query_lightrag_with_token(extra_prompt, current_desc)
-    extra_text = (extra_result or "").strip().replace("\r", "").replace("\n", "")
-    if "." in extra_text:
-        extra_text = extra_text.split(".")[0] + "."
-    extra_text = re.sub(r"BI-RADS\s*:[^.]*", "", extra_text, flags=re.IGNORECASE)
-    for pat in [r"\b\d+(\.\d+)?\s*(mm|cm)\b", r"[×xX*]", r"约\s*\d+(\.\d+)?\s*(mm|cm)",
-                r"\b(T1|T2|DWI|ADC|MIP)\b", r"\d{4}[/-]\d{1,2}[/-]\d{1,2}", r"\d{4}年\d{1,2}月\d{1,2}日"]:
-        extra_text = re.sub(pat, "", extra_text, flags=re.IGNORECASE)
-    extra_text = re.sub(r"(Skin | Subcutaneous tissue | Edema | Thickening)[^，.]*", "", extra_text)
-    extra_text = extra_text.replace("、", "，").strip()
-    if extra_text.endswith("."):
-        tmp = extra_text[:-1]
-    else:
-        tmp = extra_text
+    result, token = call_gpt_with_token(prompt)
+    res = (result or "").strip()
+    return res, token
 
-    clauses = [c.strip() for c in tmp.split("，") if c.strip()]
-    ph_re = r"(Consider metastasis|Invasion|Please correlate with other examinations)"
-    idx = None
-    for i, c in enumerate(clauses):
-        if re.search(ph_re, c):
-            idx = i
-            break
-
-    if idx is not None:
-        keep = [clauses[idx - 1], clauses[idx]] if idx > 0 else [clauses[idx]]
-    else:
-        keep = clauses[:2]
-    _keep2 = []
-    for c in keep:
-        c2 = re.sub(r"(Skin | Subcutaneous tissue | Edema | Thickening)[^，.]*", "", c).strip()
-        if c2:
-            _keep2.append(c2)
-    keep = _keep2
-    extra_text = "，".join(keep) + ("." if keep else "")
-    extra_text = re.sub(r"[，、]+\s*.", ".", extra_text)
-    extra_text = re.sub(r"，{2,}", "，", extra_text).strip()
-    has_site = re.search(r"(Axilla|Armpit|Lymph node|Internal mammary|Supraclavicular|Infraclavicular|Nipple|Areola|Chest wall|Pectoral muscle|Bone|Pleura)", extra_text)
-    phrases = re.findall(ph_re, extra_text)
-    only_verb = extra_text in {"Invasion.", "Consider metastasis.", "Please correlate with other examinations."}
-    if (not extra_text) or (not has_site) or only_verb or len(phrases) != 1:
-        extra_text = ""
-    core_out = core_text.strip()
-    if core_out == "":
-        core_out = "#"
-    final_text = f"{core_out}{extra_text}"
-    if is_baseline_case(memory) and re.search(r"BI\s*[-–—]?\s*RADS\s*[:：]?\s*6\b", final_text, flags=re.I):
-        print("[Guard] Baseline case detected BI-RADS:6 in radiology diagnosis → Clearing and retrying")
-        final_text = ""
-    if not is_baseline_case(memory) and not re.search(r"BI\s*[-–—]?\s*RADS\s*[:：]?\s*6\b", final_text, flags=re.I):
-        print("[Guard] Follow-up case does not include BI-RADS:6 in radiology diagnosis → Clearing and retrying")
-        final_text = ""
-    if contains_dirty_tokens(final_text):
-        print("[Guard] The diagnosis text contains suspected references/links/code or dirty tokens → Clearing for retry")
-        final_text = ""
-    final_text = _dedup_keep_one(final_text)
-    return final_text, tok1 + tok2
 
 def memory_checker(memory, is_baseline_flag=None, max_rounds=10, shot_mode=0):
     total_tokens = 0
@@ -411,25 +226,6 @@ def memory_checker(memory, is_baseline_flag=None, max_rounds=10, shot_mode=0):
                         updated = True
             except Exception as e:
                 print(f"[MemoryChecker] Lesion list parsing or request failed, skipping this round: {e}")
-                continue
-
-        if not memory.get("Treatment Efficacy Result") and memory.get("current_lesion_list"):
-            print("[MemoryChecker] Processing efficacy evaluation...")
-            try:
-                eval_result, eval_token = eval_response_agent(memory, shot_mode=shot_mode)
-                total_tokens += eval_token
-                if eval_result:
-                    memory["Treatment Efficacy Result"] = eval_result
-                    if not all_eval_result_have(eval_result):
-                        print("Stored content in memory:", memory["Treatment Efficacy Result"])
-                        print("[MemoryChecker] Detected invalid efficacy evaluation result, clearing and retrying next round.")
-                        memory["Treatment Efficacy Result"] = ""
-                        updated = True
-                    else:
-                        print("Stored content in memory:", memory["Treatment Efficacy Result"])
-                        updated = True
-            except Exception as e:
-                print(f"[MemoryChecker] Efficacy evaluation request failed, skipping this round: {e}")
                 continue
 
         if not memory.get("Radiological Diagnosis") and memory.get("current_lesion_list"):
@@ -468,6 +264,8 @@ def memory_checker(memory, is_baseline_flag=None, max_rounds=10, shot_mode=0):
             _append_failure_line(missing, case_id=case_id, rounds_done=round_idx, max_rounds=max_rounds)
 
     return memory, total_tokens
+
+
 
 
 
